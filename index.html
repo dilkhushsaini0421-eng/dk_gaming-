@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DK GAMING</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101329;color:white;font-family:Arial;text-align:center}
+header{padding:25px;background:#191f45}
+h1{color:#00eaff}
+.container{padding:20px}
+.card{background:#22294d;margin:18px auto;padding:22px;border-radius:16px;max-width:420px}
+button{background:#00d9ff;border:0;padding:13px 22px;border-radius:10px;font-weight:bold;margin:6px}
+#board{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;max-width:300px;margin:20px auto}
+.cell{height:90px;background:#30385e;border-radius:8px;font-size:35px;color:white}
+</style>
+</head>
+<body>
+<header>
+<h1>🎮 DK GAMING 🎮</h1>
+<p>WELCOME TO FREE GAMES</p>
+</header>
+<div class="container">
+<div class="card">
+<h2>🎲 LUDO GAME</h2>
+<p>Choose your game mode</p>
+<button onclick="ludo(2)">2 Players</button>
+<button onclick="ludo(4)">4 Players</button>
+<button onclick="ludo(1)">Computer</button>
+<p id="ludoMsg">Ludo mode select करें</p>
+<button onclick="roll()">🎲 Roll Dice</button>
+<p id="dice">Dice: -</p>
+</div>
+<div class="card">
+<h2>❌ TIC TAC TOE</h2>
+<div id="board"></div>
+<p id="msg">Player X की बारी</p>
+<button onclick="reset()">Restart</button>
+</div>
+<div class="card">
+<h2>🐍 SNAKE GAME</h2>
+<p>जल्द आ रहा है!</p>
+</div>
+</div>
+<script>
+let mode=0;
+function ludo(n){
+mode=n;
+document.getElementById('ludoMsg').innerText=
+n===1?'Play With Computer':n+' Players Selected';
+}
+function roll(){
+if(!mode){alert('पहले Ludo mode चुनें');return}
+document.getElementById('dice').innerText='Dice: '+(Math.floor(Math.random()*6)+1);
+}
+let cells=Array(9).fill('');
+let player='X',over=false;
+function draw(){
+let b=document.getElementById('board');
+b.innerHTML='';
+cells.forEach((v,i)=>{
+let x=document.createElement('button');
+x.className='cell';x.textContent=v;
+x.onclick=()=>play(i);b.appendChild(x);
+});
+}
+function play(i){
+if(cells[i]||over)return;
+cells[i]=player;
+if(check()){
+document.getElementById('msg').innerText=player+' Wins!';
+over=true;
+}else if(cells.every(Boolean)){
+document.getElementById('msg').innerText='Draw!';
+over=true;
+}else{
+player=player==='X'?'O':'X';
+document.getElementById('msg').innerText='Player '+player+' की बारी';
+}
+draw();
+}
+function check(){
+let w=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+return w.some(a=>cells[a[0]]&&cells[a[0]]===cells[a[1]]&&cells[a[1]]===cells[a[2]]);
+}
+function reset(){
+cells=Array(9).fill('');player='X';over=false;
+document.getElementById('msg').innerText='Player X की बारी';draw();
+}
+draw();
+</script>
+</body>
+</html>
